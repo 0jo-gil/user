@@ -1,5 +1,6 @@
 package com.zerobase.fastlms.banner;
 
+import com.zerobase.fastlms.banner.dto.BannerDto;
 import com.zerobase.fastlms.banner.entity.Banner;
 import com.zerobase.fastlms.banner.model.BannerInput;
 import com.zerobase.fastlms.banner.model.BannerParam;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -31,11 +34,24 @@ public class AdminBannerController {
     @GetMapping("/admin/banner/list.do")
     public String list(Model model, BannerParam parameter){
 
+        List<BannerDto> bannerList = bannerService.list(parameter);
+
+        long totalCount = 0;
+        if (!CollectionUtils.isEmpty(bannerList)) {
+            totalCount = bannerList.get(0).getTotalCount();
+        }
+        String queryString = parameter.getQueryString();
+        String pagerHtml = getPaperHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
+
+        model.addAttribute("list", courseList);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("pager", pagerHtml);
+
+
         return "admin/banner/list";
     }
 
-//    @GetMapping(value = {"/admin/banner/add.do", "/admin/banner/edit.do"})
-    @GetMapping("/admin/banner/add.do")
+    @GetMapping(value = {"/admin/banner/add.do", "/admin/banner/edit.do"})
     public String add(Model model, HttpServletRequest request
             , BannerInput parameter) {
 
@@ -100,9 +116,7 @@ public class AdminBannerController {
         return new String[]{newFilename, newUrlFilename};
     }
 
-//    @PostMapping(value = {"/admin/banner/add.do", "/admin/banner/edit.do"})
-    @PostMapping("/admin/banner/add.do")
-
+    @PostMapping(value = {"/admin/banner/add.do", "/admin/banner/edit.do"})
     public String addSubmit(Model model, HttpServletRequest request
             , MultipartFile file
             , BannerInput parameter) {

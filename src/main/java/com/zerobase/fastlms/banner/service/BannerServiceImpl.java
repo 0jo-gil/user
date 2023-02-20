@@ -1,5 +1,6 @@
 package com.zerobase.fastlms.banner.service;
 
+import com.zerobase.fastlms.banner.dto.BannerDto;
 import com.zerobase.fastlms.banner.entity.Banner;
 import com.zerobase.fastlms.banner.model.BannerInput;
 import com.zerobase.fastlms.banner.model.BannerParam;
@@ -93,7 +94,7 @@ public class BannerServiceImpl implements BannerService {
     }
     
     @Override
-    public List<CourseDto> list(BannerParam parameter) {
+    public List<BannerDto> list(BannerParam parameter) {
 
 //
 //        long totalCount = courseMapper.selectListCount(parameter);

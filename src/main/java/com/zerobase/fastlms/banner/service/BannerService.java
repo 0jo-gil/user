@@ -1,5 +1,6 @@
 package com.zerobase.fastlms.banner.service;
 
+import com.zerobase.fastlms.banner.dto.BannerDto;
 import com.zerobase.fastlms.banner.model.BannerInput;
 import com.zerobase.fastlms.banner.model.BannerParam;
 import com.zerobase.fastlms.course.dto.CourseDto;
@@ -26,7 +27,7 @@ public interface BannerService {
     /**
      * 배너 목록
      */
-    List<CourseDto> list(BannerParam parameter);
+    List<BannerDto> list(BannerParam parameter);
     
     /**
      * 배너 상세정보
