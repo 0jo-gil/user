@@ -59,6 +59,7 @@ public class MemberController {
             parameter.setUserUA(UserAgentUtil.getUserAgent(request));
 
             memberLogService.register(parameter);
+            memberService.updateLastLoginDt(userId);
         }
 
         return "redirect:/";

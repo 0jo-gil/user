@@ -172,7 +172,22 @@ public class MemberServiceImpl implements MemberService {
         
         return true;
     }
-    
+
+    @Override
+    public boolean updateLastLoginDt(String userId) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+        member.setLastLoginDt(LocalDateTime.now());
+
+        memberRepository.save(member);
+        return true;
+    }
+
     @Override
     public boolean updatePassword(String userId, String password) {
     

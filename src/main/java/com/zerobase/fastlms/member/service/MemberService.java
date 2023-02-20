@@ -7,6 +7,7 @@ import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MemberService extends UserDetailsService {
@@ -38,7 +39,12 @@ public interface MemberService extends UserDetailsService {
      * 회원 상태 변경
      */
     boolean updateStatus(String userId, String userStatus);
-    
+
+    /**
+     * 회원 최근 로그인 일자 변경
+     */
+    boolean updateLastLoginDt(String userId);
+
     /**
      * 회원 비밀번호 초기화
      */
