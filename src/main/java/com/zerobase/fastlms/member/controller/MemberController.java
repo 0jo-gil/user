@@ -2,19 +2,27 @@ package com.zerobase.fastlms.member.controller;
 
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.common.model.ResponseResult;
 import com.zerobase.fastlms.course.dto.TakeCourseDto;
 import com.zerobase.fastlms.course.model.ServiceResult;
 import com.zerobase.fastlms.course.service.TakeCourseService;
 import com.zerobase.fastlms.member.model.MemberInput;
+import com.zerobase.fastlms.member.model.MemberLogInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
+import com.zerobase.fastlms.member.service.MemberLogService;
 import com.zerobase.fastlms.member.service.MemberService;
-import com.zerobase.fastlms.util.PasswordUtils;
+import com.zerobase.fastlms.util.AuthUtil;
+import com.zerobase.fastlms.util.ClientIpUtil;
+import com.zerobase.fastlms.util.UserAgentUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -26,11 +34,34 @@ public class MemberController {
     
     private final MemberService memberService;
     private final TakeCourseService takeCourseService;
-    
-    @RequestMapping("/member/login")
-    public String login() {
-        
+    private final MemberLogService memberLogService;
+
+
+
+    @RequestMapping(value="/member/login", method=RequestMethod.GET)
+    public String login(
+            HttpServletRequest request
+    ) {
+
         return "member/login";
+    }
+
+    @RequestMapping(value="/member/login", method=RequestMethod.POST)
+    public String login(
+            HttpServletRequest request,
+            MemberLogInput parameter
+    ) {
+        if(AuthUtil.getAuthStatus()){
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            parameter.setUserId(userId);
+            parameter.setUserIp(ClientIpUtil.getClientIp(request));
+            parameter.setUserUA(UserAgentUtil.getUserAgent(request));
+
+            memberLogService.register(parameter);
+        }
+
+        return "redirect:/";
     }
     
     @GetMapping("/member/find-password")
@@ -63,13 +94,6 @@ public class MemberController {
         
         return "member/register_complete";
     }
-    
-    // http://www.naver.com/news/list.do?id=123&key=124&text=쿼리
-    // https://
-    // 프로토콜://도메인(IP)/news/list.do?쿼리스트링(파라미터)
-    // https://www.naver.com/cafe/detail.do?id=1111
-    // https://www.naver.com/cafe/detail.do?id=2222
-    
     
     @GetMapping("/member/email-auth")
     public String emailAuth(Model model, HttpServletRequest request) {
@@ -172,4 +196,5 @@ public class MemberController {
         
         return "redirect:/member/logout";
     }
+
 }
