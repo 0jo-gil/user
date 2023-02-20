@@ -2,6 +2,7 @@ package com.zerobase.fastlms.banner.service;
 
 import com.zerobase.fastlms.banner.dto.BannerDto;
 import com.zerobase.fastlms.banner.entity.Banner;
+import com.zerobase.fastlms.banner.mapper.BannerMapper;
 import com.zerobase.fastlms.banner.model.BannerInput;
 import com.zerobase.fastlms.banner.model.BannerParam;
 import com.zerobase.fastlms.banner.repository.BannerRepository;
@@ -31,7 +32,7 @@ import java.util.Optional;
 public class BannerServiceImpl implements BannerService {
     
     private final BannerRepository bannerRepository;
-//    private final CourseMapper courseMapper;
+    private final BannerMapper bannerMapper;
     
     
     private LocalDate getLocalDate(String value) {
@@ -66,78 +67,65 @@ public class BannerServiceImpl implements BannerService {
     
     @Override
     public boolean set(BannerInput parameter) {
-        
-//        LocalDate saleEndDt = getLocalDate(parameter.getSaleEndDtText());
-//
-//        Optional<Course> optionalCourse = courseRepository.findById(parameter.getId());
-//        if (!optionalCourse.isPresent()) {
-//            //수정할 데이터가 없음
-//            return false;
-//        }
-//
-//        Course course = optionalCourse.get();
-//        course.setCategoryId(parameter.getCategoryId());
-//        course.setSubject(parameter.getSubject());
-//        course.setKeyword(parameter.getKeyword());
-//        course.setSummary(parameter.getSummary());
-//        course.setContents(parameter.getContents());
-//        course.setPrice(parameter.getPrice());
-//        course.setSalePrice(parameter.getSalePrice());
-//        course.setSaleEndDt(saleEndDt);
-//        course.setUdtDt(LocalDateTime.now());
-//        course.setFilename(parameter.getFilename());
-//        course.setUrlFilename(parameter.getUrlFilename());
-//
-//        courseRepository.save(course);
+        Optional<Banner> optionalBanner = bannerRepository.findById(parameter.getId());
+        if (!optionalBanner.isPresent()) {
+            return false;
+        }
+        Banner banner = optionalBanner.get();
+
+        banner.setBannerName(parameter.getBannerName());
+        banner.setImagePath(parameter.getImagePath());
+        banner.setLinkPath(parameter.getLinkPath());
+        banner.setLinkTarget(parameter.getLinkTarget());
+        banner.setSortValue(parameter.getSortValue());
+        banner.setUsingYn(parameter.isUsingYn());
+        banner.setUdtDt(getLocalDate(LocalDate.now().toString()));
+        banner.setFilename(parameter.getFilename());
+        banner.setUrlFilename(parameter.getUrlFilename());
+
+        bannerRepository.save(banner);
         
         return true;
     }
     
     @Override
     public List<BannerDto> list(BannerParam parameter) {
+        long totalCount = bannerMapper.selectListCount(parameter);
+        List<BannerDto> list = bannerMapper.selectList(parameter);
+        if (!CollectionUtils.isEmpty(list)) {
+            int i = 0;
+            for (BannerDto x : list) {
+                x.setTotalCount(totalCount);
+                x.setSeq(totalCount - parameter.getPageStart() - i);
+                i++;
+            }
+        }
+        return list;
 
-//
-//        long totalCount = courseMapper.selectListCount(parameter);
-//
-//        List<CourseDto> list = courseMapper.selectList(parameter);
-//        if (!CollectionUtils.isEmpty(list)) {
-//            int i = 0;
-//            for (CourseDto x : list) {
-//                x.setTotalCount(totalCount);
-//                x.setSeq(totalCount - parameter.getPageStart() - i);
-//                i++;
-//            }
-//        }
-//        return list;
-
-        return null;
     }
     
     @Override
-    public CourseDto getById(long id) {
-//        return bannerRepository.findById(id).map(CourseDto::of).orElse(null);
-
-        return null;
+    public BannerDto getById(long id) {
+        return bannerRepository.findById(id).map(BannerDto::of).orElse(null);
     }
     
     @Override
     public boolean del(String idList) {
-        
-//        if (idList != null && idList.length() > 0) {
-//            String[] ids = idList.split(",");
-//            for (String x : ids) {
-//                long id = 0L;
-//                try {
-//                    id = Long.parseLong(x);
-//                } catch (Exception e) {
-//                }
-//
-//                if (id > 0) {
-//                    courseRepository.deleteById(id);
-//                }
-//            }
-//        }
-        
+        if (idList != null && idList.length() > 0) {
+            String[] ids = idList.split(",");
+            for (String x : ids) {
+                long id = 0L;
+                try {
+                    id = Long.parseLong(x);
+                } catch (Exception e) {
+                }
+
+                if (id > 0) {
+                    bannerRepository.deleteById(id);
+                }
+            }
+        }
+
         return true;
     }
     

@@ -5,6 +5,7 @@ import com.zerobase.fastlms.banner.entity.Banner;
 import com.zerobase.fastlms.banner.model.BannerInput;
 import com.zerobase.fastlms.banner.model.BannerParam;
 import com.zerobase.fastlms.banner.service.BannerService;
+import com.zerobase.fastlms.course.controller.BaseController;
 import com.zerobase.fastlms.course.dto.CourseDto;
 import com.zerobase.fastlms.course.model.CourseInput;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class AdminBannerController {
+public class AdminBannerController extends BaseController {
     private final BannerService bannerService;
 
     @GetMapping("/admin/banner/list.do")
@@ -43,7 +44,7 @@ public class AdminBannerController {
         String queryString = parameter.getQueryString();
         String pagerHtml = getPaperHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
 
-        model.addAttribute("list", courseList);
+        model.addAttribute("list", bannerList);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("pager", pagerHtml);
 
@@ -56,24 +57,24 @@ public class AdminBannerController {
             , BannerInput parameter) {
 
         //카테고리 정보를 내려줘야 함.
-//        model.addAttribute("category", bannerService.list());
 
-//        boolean editMode = request.getRequestURI().contains("/edit.do");
-//        CourseDto detail = new CourseDto();
-//
-//        if (editMode) {
-//            long id = parameter.getId();
-//            CourseDto existCourse = bannerService.getById(id);
-//            if (existCourse == null) {
-//                // error 처리
-//                model.addAttribute("message", "배너가 존재하지 않습니다.");
-//                return "common/error";
-//            }
-//            detail = existCourse;
-//        }
-//
-//        model.addAttribute("editMode", editMode);
-//        model.addAttribute("detail", detail);
+        boolean editMode = request.getRequestURI().contains("/edit.do");
+        BannerDto detail = new BannerDto();
+
+        if (editMode) {
+            long id = parameter.getId();
+
+            BannerDto existBanner = bannerService.getById(id);
+            if (existBanner == null) {
+                // error 처리
+                model.addAttribute("message", "배너가 존재하지 않습니다.");
+                return "common/error";
+            }
+            detail = existBanner;
+        }
+
+        model.addAttribute("editMode", editMode);
+        model.addAttribute("detail", detail);
 
         return "admin/banner/add";
     }
@@ -126,8 +127,7 @@ public class AdminBannerController {
 
         if (file != null) {
             String originalFilename = file.getOriginalFilename();
-
-            String baseLocalPath = "/Users/gil/Documents/sources/zerobase/fastlms/files";
+            String baseLocalPath = "/Users/0jo/Documents/ZB/spring_test/user/files";
             String baseUrlPath = "/files";
 
             String[] arrFilename = getNewSaveFile(baseLocalPath, baseUrlPath, originalFilename);
@@ -151,7 +151,7 @@ public class AdminBannerController {
 
         if (editMode) {
             long id = parameter.getId();
-            CourseDto existCourse = bannerService.getById(id);
+            BannerDto existCourse = bannerService.getById(id);
             if (existCourse == null) {
                 // error 처리
                 model.addAttribute("message", "강좌정보가 존재하지 않습니다.");
@@ -167,4 +167,13 @@ public class AdminBannerController {
         return "redirect:/admin/banner/list.do";
     }
 
+    @PostMapping("/admin/banner/delete.do")
+    public String del(Model model,
+                      HttpServletRequest request,
+                      BannerInput parameter
+    ) {
+        boolean result = bannerService.del(parameter.getIdList());
+
+        return "redirect:/admin/banner/list.do";
+    }
 }

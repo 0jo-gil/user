@@ -18,6 +18,8 @@ public class BannerInput {
     boolean usingYn;
     LocalDate regDt;
 
+    String idList;
+
 
     String filename;
     String urlFilename;

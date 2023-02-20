@@ -32,8 +32,6 @@
     <script>
         $(document).ready(function() {
 
-
-
         });
     </script>
 </head>
@@ -44,17 +42,14 @@
 <div class="detail">
 
     <form id="submitForm" method="post" enctype="multipart/form-data">
-
         <table>
             <tbody>
-
             <tr>
                 <th>
                     배너명
                 </th>
                 <td>
-<!--                     th:value="${detail.bannerName}"-->
-                    <input type="text" name="bannerName" required placeholder="배너명 입력" />
+                    <input type="text" th:value="${detail.bannerName}" name="bannerName" required placeholder="배너명 입력" />
                 </td>
             </tr>
             <tr>
@@ -69,8 +64,7 @@
                     링크주소
                 </th>
                 <td>
-<!--                     th:value="${detail.linkPath}"-->
-                    <input type="text" name="linkPath" required placeholder="링크주소 입력" />
+                    <input type="text" th:value="${detail.linkPath}" name="linkPath" required placeholder="링크주소 입력" />
                 </td>
             </tr>
 
@@ -79,15 +73,28 @@
                     오픈 방법
                 </th>
                 <td>
-<!--                     th:selected="${detail.linkTarget == x.linkTarget}"
-                            th:each="x : ${category}"
-                            th:value="${x.linkTarget}"
-                            th:text="${x.linkTarget}"-->
-                    <select name="linkTarget" required>
-                        <option value=""> 오픈방법 선택 </option>
-                        <option
+                    <select
 
-                        > </option>
+                            th:value="${detail.linkTarget}"
+                            name="linkTarget" required>
+                        <option
+                                value=""
+                                th:selected="${detail.linkTarget} == ''"
+                        >
+                            오픈방법 선택
+                        </option>
+                        <option
+                                value="_blank"
+                                th:selected="${detail.linkTarget} == '_blank'"
+                        >
+                            새창
+                        </option>
+                        <option
+                            value="_self"
+                            th:selected="${detail.linkTarget} == '_self'"
+                        >
+                            현재창
+                        </option>
                     </select>
                 </td>
             </tr>
@@ -97,50 +104,24 @@
                     정렬 순서
                 </th>
                 <td>
-<!--          th:value="${detail.sortValue}"          -->
-                    <input type="text" name="sortValue"/>
+                    <input type="text" th:value="${detail.sortValue}" name="sortValue"/>
                 </td>
             </tr>
-
-            <td>
-<!--
-                <input th:checked="${detail.usingYn}" type="checkbox" th:id="'usingYn_' + ${x.id}" th:name="'usingYn_' + ${x.id}" value="true"/>
-                <label th:for="'usingYn_' + ${x.id}">사용</label>
-                  -->
-            </td>
+            <tr>
+                <th>공개 여부</th>
+                <td>
+                    <input th:checked="${detail.usingYn}" type="checkbox" id="usingYn" name="usingYn" value="true"/>
+                </td>
+            </tr>
             </tbody>
         </table>
 
         <div class="buttons">
-<!--
             <button th:if="${editMode}" type="submit"> 강좌 수정 하기 </button>
-            -->
-<!--            th:if="${!editMode}"-->
-            <button  type="submit"> 강좌 등록 하기 </button>
+            <button th:if="${!editMode}" type="submit"> 강좌 등록 하기 </button>
             <a href="/admin/banner/list.do"> 목록 이동 </a>
         </div>
-
     </form>
 </div>
-
-
-<script type="text/javascript" src="/res/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
-<script type="text/javascript">
-
-    var oEditors = [];
-
-    setTimeout(function() {
-
-        nhn.husky.EZCreator.createInIFrame({
-            oAppRef: oEditors,
-            elPlaceHolder: "contents",
-            sSkinURI: "/res/se2/SmartEditor2Skin.html",
-            fCreator: "createSEditor2"
-        });
-
-
-    }, 100);
-
-</script>
 </body>
 </html>

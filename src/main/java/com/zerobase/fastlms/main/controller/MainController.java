@@ -19,7 +19,8 @@ public class MainController {
     private final MailComponents mailComponents;
     
     @RequestMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request) {
+//        String userAgent = RequestUt
         
         /*
         String email = "satcop@naver.com";

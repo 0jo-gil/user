@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zerobase.fastlms.course.mapper.CourseMapper">
+<mapper namespace="com.zerobase.fastlms.banner.mapper.BannerMapper">
 
 
     <sql id="selectListWhere">
@@ -36,14 +36,14 @@
 
     <select id="selectListCount" resultType="long">
         select count(*)
-        from course
+        from banner
         where 1 = 1
             <include refid="selectListWhere"/>
     </select>
 
-    <select id="selectList" resultType="com.zerobase.fastlms.course.dto.CourseDto">
+    <select id="selectList" resultType="com.zerobase.fastlms.banner.dto.BannerDto">
         select *
-        from course
+        from banner
         where 1 = 1
             <include refid="selectListWhere"/>
         order by reg_dt desc

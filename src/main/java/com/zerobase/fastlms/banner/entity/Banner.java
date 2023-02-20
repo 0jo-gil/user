@@ -33,6 +33,8 @@ public class Banner {
 
     LocalDate regDt;
 
+    LocalDate udtDt;
+
     String filename;
     String urlFilename;
 }

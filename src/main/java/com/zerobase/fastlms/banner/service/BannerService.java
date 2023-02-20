@@ -32,7 +32,7 @@ public interface BannerService {
     /**
      * 배너 상세정보
      */
-    CourseDto getById(long id);
+    BannerDto getById(long id);
     
     /**
      * 배너 내용 삭제
