@@ -3,6 +3,9 @@ package com.zerobase.fastlms.banner.repository;
 import com.zerobase.fastlms.banner.entity.Banner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BannerRepository extends JpaRepository<Banner, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface BannerRepository extends JpaRepository<Banner, Long> {
+    Optional<List<Banner>> findByUsingYn (boolean usingYn);
 }

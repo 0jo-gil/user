@@ -37,6 +37,8 @@ public class AdminBannerController extends BaseController {
 
         List<BannerDto> bannerList = bannerService.list(parameter);
 
+        System.out.println(bannerList);
+
         long totalCount = 0;
         if (!CollectionUtils.isEmpty(bannerList)) {
             totalCount = bannerList.get(0).getTotalCount();
@@ -127,7 +129,8 @@ public class AdminBannerController extends BaseController {
 
         if (file != null) {
             String originalFilename = file.getOriginalFilename();
-            String baseLocalPath = "/Users/0jo/Documents/ZB/spring_test/user/files";
+//            String baseLocalPath = "/Users/0jo/Documents/ZB/spring_test/user/files";
+            String baseLocalPath = "D:/java/user/files";
             String baseUrlPath = "/files";
 
             String[] arrFilename = getNewSaveFile(baseLocalPath, baseUrlPath, originalFilename);

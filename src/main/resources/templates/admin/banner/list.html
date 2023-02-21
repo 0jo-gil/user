@@ -38,6 +38,14 @@
     <script>
 
         $(document).ready(function(){
+            $('#selectAll').on('click', function(){
+                let checked = $(this).is(':checked');
+
+                $('#dataList input[type=checkbox]').each(function(v, i) {
+                    $(this).prop('checked', checked);
+                })
+            })
+
             $('#deleteButton').on('click', function(){
                 let $checked = $('#dataList input[type=checkbox]:checked');
 
@@ -78,7 +86,7 @@
         <div class="buttons">
             <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
 
-            <a href="/admin/banner/add.do"> 강좌 등록 </a>
+            <a href="/admin/banner/add.do"> 배너 등록 </a>
             <button id="deleteButton" type="button"> 선택 삭제 </button>
         </div>
 
@@ -110,7 +118,7 @@
                        th:href="${'edit.do?id=' + x.id}"></a>
                 </td>
                 <td>
-                    <a th:href="${x.linkPath}">
+                    <a th:href="${x.linkPath}" th:target="${x.linkTarget}">
                         <img th:src="'/showImage?name=' + ${x.filename}" th:alt="${x.bannerName} + '이미지'"/>
                     </a>
                 </td>

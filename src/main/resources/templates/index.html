@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>메인 페이지</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('.bxslider').bxSlider();
+        });
+    </script>
+
 </head>
 <body>
     <h1>메인 페이지 </h1>
     <div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
 
-    <div>
-        <img src="./files/2023/02/20/8b60afc02522404190179ca52fbc12dc.png"/>
-    </div>
+<!--    <div th:text="${bannerList}"></div>-->
 
+    <div class="home__slider">
+        <div class="bxslider">
+            <div th:each="x, i:${bannerList}">
+<!--                <p th:text="${x.bannerName}"></p>-->
+                <a th:href="${x.linkPath}" target="_blank">
+                    <img th:src="'/showImage?name=' + ${x.filename}" th:alt="${x.bannerName} + '이미지'"/>
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

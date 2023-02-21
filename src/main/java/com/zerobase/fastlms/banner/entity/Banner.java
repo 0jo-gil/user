@@ -37,4 +37,5 @@ public class Banner {
 
     String filename;
     String urlFilename;
+
 }

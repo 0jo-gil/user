@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class MemberLog {
     @Id
+    private long Id;
     private String userId;
     private String userIp;
     private LocalDateTime connectDt;

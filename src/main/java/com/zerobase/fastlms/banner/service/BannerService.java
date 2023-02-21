@@ -42,12 +42,12 @@ public interface BannerService {
     /**
      * 프론트 배너 목록
      */
-    List<CourseDto> frontList(CourseParam parameter);
+    List<BannerDto> showBannerList();
     
     /**
      * 프론트 배너 상세 정보
      */
-    CourseDto frontDetail(long id);
+    BannerDto frontDetail(long id);
     
     /**
      * 수강신청

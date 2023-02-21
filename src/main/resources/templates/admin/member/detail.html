@@ -101,6 +101,24 @@
 
         </div>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>로그인일자</th>
+                    <th>접속 IP</th>
+                    <th>접속 User Agent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="x : ${memberLog}">
+                    <td th:text="${x.seq}">1</td>
+                    <td th:text="${x.connectDt}"></td>
+                    <td th:text="${x.userIp}"></td>
+                    <td th:text="${x.userua}"></td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 

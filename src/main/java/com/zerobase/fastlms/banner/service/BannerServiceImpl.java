@@ -1,5 +1,6 @@
 package com.zerobase.fastlms.banner.service;
 
+import com.zerobase.fastlms.admin.entity.Category;
 import com.zerobase.fastlms.banner.dto.BannerDto;
 import com.zerobase.fastlms.banner.entity.Banner;
 import com.zerobase.fastlms.banner.mapper.BannerMapper;
@@ -17,6 +18,7 @@ import com.zerobase.fastlms.course.model.TakeCourseInput;
 import com.zerobase.fastlms.course.repository.CourseRepository;
 import com.zerobase.fastlms.course.repository.TakeCourseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -33,6 +35,10 @@ public class BannerServiceImpl implements BannerService {
     
     private final BannerRepository bannerRepository;
     private final BannerMapper bannerMapper;
+
+    private Sort getSortBySortValueDesc(){
+        return Sort.by(Sort.Direction.DESC, "sortValue");
+    }
     
     
     private LocalDate getLocalDate(String value) {
@@ -90,8 +96,11 @@ public class BannerServiceImpl implements BannerService {
     
     @Override
     public List<BannerDto> list(BannerParam parameter) {
+        List<Banner> banners = bannerRepository.findAll(getSortBySortValueDesc());
+
         long totalCount = bannerMapper.selectListCount(parameter);
-        List<BannerDto> list = bannerMapper.selectList(parameter);
+        List<BannerDto> list = BannerDto.of(banners);
+
         if (!CollectionUtils.isEmpty(list)) {
             int i = 0;
             for (BannerDto x : list) {
@@ -101,7 +110,6 @@ public class BannerServiceImpl implements BannerService {
             }
         }
         return list;
-
     }
     
     @Override
@@ -130,23 +138,26 @@ public class BannerServiceImpl implements BannerService {
     }
     
     @Override
-    public List<CourseDto> frontList(CourseParam parameter) {
-//
-//        if (parameter.getCategoryId() < 1) {
-//            List<Course> courseList = courseRepository.findAll();
-//            return CourseDto.of(courseList);
-//        }
-//
-//        Optional<List<Course>> optionalCourses = courseRepository.findByCategoryId(parameter.getCategoryId());
-//        if (optionalCourses.isPresent()) {
-//            return CourseDto.of(optionalCourses.get());
-//        }
+    public List<BannerDto> showBannerList() {
+        List<Banner> bannerList = bannerRepository.findAll();
+        Optional<List<Banner>> optionalBanners = null;
+
+        for(Banner x : bannerList){
+            if(x.isUsingYn()){
+                optionalBanners = bannerRepository.findByUsingYn(x.isUsingYn());
+            }
+        }
+
+        if (optionalBanners.isPresent()) {
+            return BannerDto.of(optionalBanners.get());
+        }
+
         return null;
     }
     
     @Override
-    public CourseDto frontDetail(long id) {
-        
+    public BannerDto frontDetail(long id) {
+
 //        Optional<Course> optionalCourse = courseRepository.findById(id);
 //        if (optionalCourse.isPresent()) {
 //            return CourseDto.of(optionalCourse.get());
